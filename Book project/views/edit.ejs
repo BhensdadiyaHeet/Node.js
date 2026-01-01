@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+</head>
+
+<body>
+    <h1>Update in monogodb</h1>
+    <form action="/updateData" method="post">
+        <input name="id" hidden value="<%=singleData.id%>">
+        <input type="text" name="book" placeholder="Enter your book name" value="<%=singleData.book%>">
+        <input type="text" name="author" placeholder="Enter your book author" value="<%=singleData.author%>">
+        <input type="number" name="price" placeholder="Enter your book price" value="<%=singleData.price%>">
+        <button type="submit">Update</button>
+    </form>
+
+
+</body>
+</html>
