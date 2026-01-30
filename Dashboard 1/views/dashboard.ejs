@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png">
+    <title>DashboardX - Overview</title>
+    <!-- Matrix base CSS -->
+    <link href="assets/libs/flot/css/float-chart.css" rel="stylesheet">
+    <link href="dist/css/style.min.css" rel="stylesheet">
+    <!-- Custom dashboard UI overrides -->
+    <style>
+        body {
+            background: #020617;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .page-wrapper {
+            background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #020617 100%);
+        }
+
+        .page-breadcrumb {
+            background: transparent;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+
+        .breadcrumb-item a,
+        .breadcrumb-item.active {
+            color: #9ca3af;
+        }
+
+        .dashboard-top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .dashboard-top-actions p {
+            margin-bottom: 0;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .dashboard-top-actions .btn-primary {
+            border-radius: 999px;
+            padding: 8px 16px;
+            border: none;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            box-shadow: 0 12px 26px rgba(22, 163, 74, 0.8);
+        }
+
+        .dashboard-top-actions .btn-primary:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+
+        .stats-row {
+            margin: 0 -8px 12px;
+        }
+
+        .stats-card {
+            border-radius: 16px;
+            border: 1px solid rgba(30, 41, 59, 0.95);
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.98));
+            padding: 12px 14px 10px;
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.95);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .stats-value {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #e5e7eb;
+        }
+
+        .stats-change {
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stats-change.positive {
+            color: #4ade80;
+        }
+
+        .stats-change.negative {
+            color: #f97373;
+        }
+
+        .stats-badge {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.95);
+            color: #9ca3af;
+        }
+
+        .panel-modern {
+            border-radius: 18px;
+            border: 1px solid rgba(30, 41, 59, 0.95);
+            background: rgba(15, 23, 42, 0.97);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.98);
+        }
+
+        .panel-modern .card-body {
+            padding: 14px 16px;
+        }
+
+        .panel-modern h4.card-title {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .panel-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .chip {
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(55, 65, 81, 0.95);
+            color: #9ca3af;
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .chip.active {
+            border-color: #4f46e5;
+            color: #c7d2fe;
+            background: rgba(55, 65, 81, 0.95);
+        }
+
+        .table-modern {
+            margin-bottom: 0;
+            color: #e5e7eb;
+        }
+
+        .table-modern thead {
+            color: #9ca3af;
+        }
+
+        .table-modern th,
+        .table-modern td {
+            border-top-color: rgba(31, 41, 55, 0.95);
+            padding: 7px 4px;
+            font-size: 12px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            font-size: 11px;
+        }
+
+        .status-pill.success {
+            background: rgba(22, 163, 74, 0.1);
+            color: #4ade80;
+        }
+
+        .status-pill.pending {
+            background: rgba(59, 130, 246, 0.1);
+            color: #93c5fd;
+        }
+
+        .status-pill.warning {
+            background: rgba(234, 179, 8, 0.1);
+            color: #fbbf24;
+        }
+
+        .highlight-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .highlight-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 9px;
+            border-radius: 12px;
+            border: 1px solid rgba(31, 41, 55, 0.95);
+            background: rgba(15, 23, 42, 0.98);
+        }
+
+        .highlight-main {
+            font-size: 12px;
+        }
+
+        .highlight-meta {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .highlight-tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(55, 65, 81, 0.95);
+            color: #cbd5f5;
+            align-self: flex-start;
+        }
+
+        .footer {
+            border-top-color: rgba(30, 41, 59, 0.95);
+            background: rgba(15, 23, 42, 0.98);
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+               <%-include("header")%>
+
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <%-include("aside")%>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+             <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">Dashboard</h4>
+                        <div class="ml-auto text-right">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <div class="dashboard-top-actions">
+                    <div>
+                        <p>Welcome back, Heet 👋</p>
+                        <p>Here is a snapshot of your app performance today.</p>
+                    </div>
+                    <button class="btn btn-primary">+ New Report</button>
+                </div>
+
+                <!-- Stats row -->
+                <div class="row stats-row">
+                    <div class="col-md-6 col-lg-3 p-2">
+                        <div class="stats-card">
+                            <span class="stats-badge">Live</span>
+                            <div class="stats-label">Active users</div>
+                            <div class="stats-value">1,284</div>
+                            <div class="stats-change positive">▲ 14.2% vs last week</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 p-2">
+                        <div class="stats-card">
+                            <span class="stats-badge">Monthly</span>
+                            <div class="stats-label">Revenue</div>
+                            <div class="stats-value">$24,870</div>
+                            <div class="stats-change positive">▲ 8.5% growth</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 p-2">
+                        <div class="stats-card">
+                            <span class="stats-badge">Today</span>
+                            <div class="stats-label">New signups</div>
+                            <div class="stats-value">76</div>
+                            <div class="stats-change positive">▲ 3.1% increase</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 p-2">
+                        <div class="stats-card">
+                            <span class="stats-badge">Health</span>
+                            <div class="stats-label">Error rate</div>
+                            <div class="stats-value">0.4%</div>
+                            <div class="stats-change negative">▼ -0.2% vs avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main panels -->
+                <div class="row m-t-10">
+                    <div class="col-lg-7">
+                        <div class="card panel-modern">
+                            <div class="card-body">
+                                <h4 class="card-title">Recent activity</h4>
+                                <p class="panel-subtitle">Latest events from your users and system.</p>
+
+                                <div class="chip-row">
+                                    <span class="chip active">All</span>
+                                    <span class="chip">Signups</span>
+                                    <span class="chip">Payments</span>
+                                    <span class="chip">Errors</span>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Event</th>
+                                                <th>Status</th>
+                                                <th>When</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Alex Johnson</td>
+                                                <td>New subscription</td>
+                                                <td><span class="status-pill success">Success</span></td>
+                                                <td>3 min ago</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Priya Shah</td>
+                                                <td>Payment retry</td>
+                                                <td><span class="status-pill pending">Pending</span></td>
+                                                <td>18 min ago</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Michael Lee</td>
+                                                <td>Login</td>
+                                                <td><span class="status-pill success">OK</span></td>
+                                                <td>27 min ago</td>
+                                            </tr>
+                                            <tr>
+                                                <td>System</td>
+                                                <td>API error spike</td>
+                                                <td><span class="status-pill warning">Warning</span></td>
+                                                <td>1 hr ago</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5 m-t-10 m-lg-t-0">
+                        <div class="card panel-modern">
+                            <div class="card-body">
+                                <h4 class="card-title">Highlights</h4>
+                                <p class="panel-subtitle">Key updates from experiments, infra and features.</p>
+
+                                <ul class="highlight-list">
+                                    <li class="highlight-item">
+                                        <div>
+                                            <div class="highlight-main">Conversion rate improved</div>
+                                            <div class="highlight-meta">Landing A/B test finished with +6.2% lift.</div>
+                                        </div>
+                                        <span class="highlight-tag">Experiment</span>
+                                    </li>
+                                    <li class="highlight-item">
+                                        <div>
+                                            <div class="highlight-main">New region added</div>
+                                            <div class="highlight-meta">Asia-Pacific traffic now routed via new cluster.</div>
+                                        </div>
+                                        <span class="highlight-tag">Infra</span>
+                                    </li>
+                                    <li class="highlight-item">
+                                        <div>
+                                            <div class="highlight-main">Churn reduced</div>
+                                            <div class="highlight-meta">Downgrades this week are 17% lower.</div>
+                                        </div>
+                                        <span class="highlight-tag">Retention</span>
+                                    </li>
+                                    <li class="highlight-item">
+                                        <div>
+                                            <div class="highlight-main">New feature adoption</div>
+                                            <div class="highlight-meta">Team boards used by 58% of active orgs.</div>
+                                        </div>
+                                        <span class="highlight-tag">Feature</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                All Rights Reserved by Matrix-admin. Designed and Developed by <a href="https://wrappixel.com">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <!-- <script src="dist/js/pages/dashboards/dashboard1.js"></script> -->
+    <!-- Charts js Files -->
+    <script src="assets/libs/flot/excanvas.js"></script>
+    <script src="assets/libs/flot/jquery.flot.js"></script>
+    <script src="assets/libs/flot/jquery.flot.pie.js"></script>
+    <script src="assets/libs/flot/jquery.flot.time.js"></script>
+    <script src="assets/libs/flot/jquery.flot.stack.js"></script>
+    <script src="assets/libs/flot/jquery.flot.crosshair.js"></script>
+    <script src="assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
+    <script src="dist/js/pages/chart/chart-page-init.js"></script>
+
+</body>
+
+</html>
+
